@@ -8,7 +8,7 @@ import { Texture } from "./Texture";
 
 const playerBrushProperties: BrushProperties = {
   brush: 'Simple',
-  shape: 'Round',
+  shape: 'Square',
 
   color: Color.black,
   radius: 48,
