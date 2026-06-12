@@ -11,7 +11,7 @@ const playerBrushProperties: BrushProperties = {
   shape: 'Square',
 
   color: Color.black,
-  radius: 48,
+  radius: 24,
   alpha: 1,
   hardness: 1,
 }
