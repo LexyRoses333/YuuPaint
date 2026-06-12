@@ -10,7 +10,7 @@ const playerBrushProperties: BrushProperties = {
   brush: 'Simple',
   shape: 'Square',
 
-  color: Color.black,
+  color: Color.blue,
   radius: 24,
   alpha: 1,
   hardness: 1,
