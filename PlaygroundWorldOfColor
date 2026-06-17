@@ -1,0 +1,112 @@
+import { registerStart } from "./Yuu API/RegisterStart";
+import { Async } from "./Yuu API/Async";
+import { Color } from "./Yuu API/Basic Types/Color";
+import { Quaternion } from "./Yuu API/Basic Types/Quaternion";
+import { Vector2 } from "./Yuu API/Basic Types/Vector2";
+import { Vector3 } from "./Yuu API/Basic Types/Vector3";
+import { createUIElement } from "./Yuu API/CreateUIElement";
+import { Entity } from "./Yuu API/Entity";
+import { BrushTypes, Paint } from "./Yuu API/Paint";
+import { BrushShapes, paintShapes } from "./Yuu API/PaintShapes";
+import { Player } from "./Yuu API/Player";
+import { playgroundDemos } from "./PlaygroundLaex";
+import { spawnPrimitive } from "./Yuu API/SpawnPrimitive";
+import { Texture } from "./Yuu API/Texture";
+
+
+//Color Scheme
+const groundColor = new Color(0, 0.349, 0.337);
+const patioColor = new Color(0.620, 0.792, 0.475);
+const waterColor = new Color(0.098, 0.698, 0.682);
+const rockColor = Color.randomHue(0.25, 0.25); 
+const skyColor = new Color(0.561, 0.486, 0.522);  //maybe use a randHue as well?
+
+registerStart(start);
+async function start() {
+    //Paintable ground 
+    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(50, 0.01, 50), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 1024); //check scale placement for collider
+    //Painting Studio
+    spawnArtStudio(new Vector3(40, 0.5, 40));
+}
+
+function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
+
+    plane.mesh.texture.set(new Texture(pixels, pixels), false);
+    plane.mesh.texture.setMipMaps(false);
+
+    plane.mesh.texture.isPaintable.set(true);
+
+     return plane;
+}
+
+function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);
+
+    cube.mesh.texture.set(new Texture(pixels, pixels), false);
+    cube.mesh.texture.setMipMaps(false);
+
+    cube.mesh.texture.isPaintable.set(true);
+
+     return cube;
+}
+
+function createPaintableSphere(pos: Vector3, columns: number, diameter: number, color: Color, alpha: number, pixels: number): Entity {
+    const sphere = spawnPrimitive.sphere(columns, 16, pos, diameter, Quaternion.one, color, alpha, 'Concave', 'Static', undefined);
+
+    sphere.mesh.texture.set(new Texture(pixels, pixels), false);
+    sphere.mesh.texture.setMipMaps(false);
+
+    sphere.mesh.texture.isPaintable.set(true);
+
+    return sphere;
+}
+
+function createPaintableCone(pos: Vector3, columns: number, diameter: number, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const cone = spawnPrimitive.cone(columns, pos, diameter, rot, color, alpha, 'Convex', 'Static', undefined);  //no "Concave" option-- check for issues with paintability
+
+    cone.mesh.texture.set(new Texture(pixels, pixels), false);
+    cone.mesh.texture.setMipMaps(false);
+
+    cone.mesh.texture.isPaintable.set(true);
+
+     return cone;
+}
+
+function spawnArtStudio(pos: Vector3) {
+    const patio = createPaintableCube(pos, new Vector3(10, 0.6, 10), Quaternion.one, patioColor, 1, 2048);
+
+    const poleScale = new Vector3(0.25, 6, 0.25);
+    
+    spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
+    spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
+    spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
+    spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
+
+    spawnPrimitive.cube(pos.add(new Vector3(0, poleScale.y , 0)), patio.scale.multiply(1.2), Quaternion.one, rockColor, 1, true, "Static", patio); //roof
+    
+    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.3, 3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(4, 0.3, 3.25)), Quaternion.one, new Vector3(1.25, 1.25, 1.25));
+    
+    //Spawn color picker and buttons
+}
+
+
+
+//Paintable sculpture
+
+//New Brush shapes?
+
+//Waterfall
+
+//Obby Rocks
+
+//Ball bowling
+
+//Rainbow Stairs
+
+//Color Picker... Moves with you? Appear/ Disappear with B Button?
+
+//Skydome Change
+
+//Teleport, Sky Obby
