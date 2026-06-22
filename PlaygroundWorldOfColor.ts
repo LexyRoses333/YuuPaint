@@ -34,7 +34,7 @@ async function start() {
     Paint.properties.radius.set(80);
 
     //Painting Studio
-    spawnArtStudio(new Vector3(30, 0.5, 30));
+    spawnArtStudio(new Vector3(20, 0.5, 20));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -42,6 +42,8 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 
     plane.mesh.texture.set(new Texture(pixels, pixels), false);
     plane.mesh.texture.setMipMaps(false);
+
+    plane.mesh.color.set(color, alpha);
 
     plane.mesh.texture.isPaintable.set(true);
 
@@ -54,6 +56,8 @@ function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, colo
     cube.mesh.texture.set(new Texture(pixels, pixels), false);
     cube.mesh.texture.setMipMaps(false);
 
+    cube.mesh.color.set(color, alpha);
+
     cube.mesh.texture.isPaintable.set(true);
 
      return cube;
@@ -65,6 +69,8 @@ function createPaintableSphere(pos: Vector3, columns: number, diameter: number, 
     sphere.mesh.texture.set(new Texture(pixels, pixels), false);
     sphere.mesh.texture.setMipMaps(false);
 
+    sphere.mesh.color.set(color, alpha);
+
     sphere.mesh.texture.isPaintable.set(true);
 
     return sphere;
@@ -75,6 +81,8 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 
     cone.mesh.texture.set(new Texture(pixels, pixels), false);
     cone.mesh.texture.setMipMaps(false);
+    
+    cone.mesh.color.set(color, alpha);
 
     cone.mesh.texture.isPaintable.set(true);
 
@@ -82,7 +90,7 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 }
 
 function spawnArtStudio(pos: Vector3) {
-    const patio = createPaintableCube(pos, new Vector3(10, 0.6, 10), Quaternion.one, patioColor, 1, 2048);
+    const patio = createPaintableCube(pos, new Vector3(10, 0.3, 10), Quaternion.one, patioColor, 1, 2048);
 
     const poleScale = new Vector3(0.25, 6, 0.25);
     
@@ -93,10 +101,11 @@ function spawnArtStudio(pos: Vector3) {
 
     spawnPrimitive.cube(pos.add(new Vector3(0, poleScale.y , 0)), patio.scale.multiply(1.2), Quaternion.one, rockColor, 1, true, "Static", patio); //roof
     
-    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.3, 3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(4, 0.3, 3.25)), Quaternion.one, new Vector3(1.25, 1.25, 1.25));
+    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.75, 3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(4, 0.75, 3.25)), Quaternion.one, new Vector3(1.25, 1.25, 1.25));
     
-    //Spawn color picker and buttons
+    playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
+    //Spawn buttons
 }
 
 
@@ -112,6 +121,8 @@ function spawnArtStudio(pos: Vector3) {
 //Ball bowling
 
 //Rainbow Stairs
+
+//Reactive ground plane -- paintable with foot pos spray brush, then reverts back to prev color after delay, secret message (ie. pixels that dont change when drawn on = code?)
 
 //Color Picker... Moves with you? Appear/ Disappear with B Button?
 
