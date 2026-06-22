@@ -123,8 +123,8 @@ function spawnPaintableSculpture(pos: Vector3) {
     const centerpieceScale = new Vector3(3, 3, 3);
     const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2) + 4, 0);
 
-    //fix rot? Change to regulat primitive cube so it can be animated?
-    const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
+    // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
+    const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.75), 0.7, true, 'Animated', undefined);
 
     for (let i = 0; i < 5; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
@@ -132,10 +132,10 @@ function spawnPaintableSculpture(pos: Vector3) {
         const z = (Math.random() * 2 - 1) * maxRadius;
         const randRot = Quaternion.fromEuler(new Vector3(0, (Math.random() * (Math.PI * 2)), 0));
 
-        spawnPrimitive.cone(6, new Vector3(x, y, z), (Math.random() * 2), randRot, Color.randomHue(), 0.95, "Convex", "Static", undefined);
+        spawnPrimitive.cone(6, pos.add(new Vector3(x, y, z)), (Math.random() * 6), randRot, Color.randomHue(), 0.95, "Convex", "Static", undefined);
     }
 
-    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0 )), 1_000);
+    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), 1_000);
 }
 
 
