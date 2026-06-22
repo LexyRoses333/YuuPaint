@@ -14,10 +14,9 @@ import { spawnPrimitive } from "./Yuu API/SpawnPrimitive";
 import { Texture } from "./Yuu API/Texture";
 
 
-export const worldOfColor = {
-    createPaintablePlane,
-    spawnArtStudio,
-}
+// export const worldOfColor = {
+//     spawnArtStudio,
+// }
 
 //Color Scheme
 const groundColor = new Color(0, 0.349, 0.337);
@@ -26,6 +25,17 @@ const waterColor = new Color(0.098, 0.698, 0.682);
 const rockColor = Color.randomHue(0.25, 0.25); 
 const skyColor = new Color(0.561, 0.486, 0.522);  //maybe use a randHue as well?
 
+registerStart(start);
+async function start() {
+    //Paintable ground 
+    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(50, 0.01, 50), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 1024); //check scale placement for collider
+    
+    Paint.properties.color.set(patioColor);
+    Paint.properties.radius.set(80);
+    
+    //Painting Studio
+    spawnArtStudio(new Vector3(40, 0.5, 40));
+}
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
     const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
