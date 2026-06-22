@@ -34,7 +34,7 @@ async function start() {
     Paint.properties.radius.set(50);
 
     //Painting Studio
-    spawnArtStudio(new Vector3(20, 0.25, 20));
+    spawnArtStudio(new Vector3(20, 0.25, -20));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -90,22 +90,22 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 }
 
 function spawnArtStudio(pos: Vector3) {
-    const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), patioColor, 1, 2048);
+    const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.one, patioColor, 1, 2048);
 
     const poleScale = new Vector3(0.25, 6, 0.25);
     const roofThickness = 0.35;
     const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
     const roofHeight = poleScale.y + (roofThickness / 2);
 
-    spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
-    spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
-    spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
-    spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
+    spawnPrimitive.cube(new Vector3(-5, poleScale.y / 2, 5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
+    spawnPrimitive.cube(new Vector3(5, poleScale.y / 2, 5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
+    spawnPrimitive.cube(new Vector3(-5, poleScale.y / 2, -5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
+    spawnPrimitive.cube(new Vector3(5, poleScale.y / 2, -5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
     spawnPrimitive.cube(pos.add(new Vector3(0, roofHeight, 0)), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.75, 3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(4, 0.75, 3.25)), Quaternion.one, new Vector3(1.25, 1.25, 1.25));
+    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.75, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(4, 0.75, -3.25)), Quaternion.one, new Vector3(2, 2, 2));
 
     playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
     //Spawn buttons
