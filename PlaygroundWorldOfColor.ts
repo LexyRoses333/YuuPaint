@@ -12,6 +12,8 @@ import { Player } from "./Yuu API/Player";
 import { playgroundDemos } from "./PlaygroundLaex";
 import { spawnPrimitive } from "./Yuu API/SpawnPrimitive";
 import { Texture } from "./Yuu API/Texture";
+import { lexy } from "./PlaygroundLexy";
+import { overTime } from "./Yuu API/MotionOverTime";
 
 
 // export const worldOfColor = {
@@ -31,10 +33,13 @@ async function start() {
     createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048); //check scale placement for collider
 
     Paint.properties.color.set(patioColor);
-    Paint.properties.radius.set(50);
+    Paint.properties.radius.set(30);
 
     //Painting Studio
     spawnArtStudio(new Vector3(20, 0.25, -20));
+
+    //Sculpture
+    spawnPaintableSculpture(new Vector3(10, 0, 12));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -51,7 +56,7 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 }
 
 function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);
+    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);  //doesnt have Concave ability for box collider?? Not paintable in world
 
     cube.mesh.texture.set(new Texture(pixels, pixels), false);
     cube.mesh.texture.setMipMaps(false);
@@ -97,18 +102,40 @@ function spawnArtStudio(pos: Vector3) {
     const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
     const roofHeight = poleScale.y + (roofThickness / 2);
 
-    spawnPrimitive.cube(new Vector3(-5, poleScale.y / 2, 5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
-    spawnPrimitive.cube(new Vector3(5, poleScale.y / 2, 5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
-    spawnPrimitive.cube(new Vector3(-5, poleScale.y / 2, -5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
-    spawnPrimitive.cube(new Vector3(5, poleScale.y / 2, -5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
+    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
+    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
+    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
+    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
-    spawnPrimitive.cube(pos.add(new Vector3(0, roofHeight, 0)), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
+    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.75, -3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(4, 0.75, -3.25)), Quaternion.one, new Vector3(2, 2, 2));
+    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.85, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(2, 0.85, -3)), Quaternion.one, Vector3.one);
 
     playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
-    //Spawn buttons
+
+    lexy.spawnDrawSettingButtons(pos.add(new Vector3(0, 1.5, -3.25)));
+}
+
+function spawnPaintableSculpture(pos: Vector3) {
+    const maxRadius = 5;
+    const maxHeight = 10;
+    const centerpieceScale = new Vector3(3, 3, 3);
+    const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2) + 4, 0);
+
+    //fix rot? Change to regulat primitive cube so it can be animated?
+    const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
+
+    for (let i = 0; i < 5; i++) {
+        const x = (Math.random() * 2 - 1) * maxRadius;
+        const y = Math.random() * maxHeight;
+        const z = (Math.random() * 2 - 1) * maxRadius;
+        const randRot = Quaternion.fromEuler(new Vector3(0, (Math.random() * (Math.PI * 2)), 0));
+
+        spawnPrimitive.cone(6, new Vector3(x, y, z), (Math.random() * 2), randRot, Color.randomHue(), 0.95, "Convex", "Static", undefined);
+    }
+
+    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0 )), 1_000);
 }
 
 
@@ -116,6 +143,8 @@ function spawnArtStudio(pos: Vector3) {
 //Paintable sculpture
 
 //New Brush shapes?
+
+//Mountain background
 
 //Waterfall
 
