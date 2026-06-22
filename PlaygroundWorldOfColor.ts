@@ -118,18 +118,18 @@ function spawnArtStudio(pos: Vector3) {
 }
 
 function spawnPaintableSculpture(pos: Vector3) {
-    const maxRadius = 7;
+    const maxRadius = 5;
     const maxHeight = 15;
-    const centerpieceScale = new Vector3(3, 15, 3);
-    const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2) + 10, 0);
+    const centerpieceScale = new Vector3(2, 15, 2);
+    const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2), 0);
 
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
 
     for (let i = 0; i < 15; i++) {
-        const x = (Math.random() * 2 - 0.5) * maxRadius;
+        const x = (Math.random() * 2 - 1) * maxRadius;
         const y = Math.random() * maxHeight;
-        const z = (Math.random() * 2 - 0.5) * maxRadius;
+        const z = (Math.random() * 2 - 1) * maxRadius;
         const randRot = Quaternion.fromEuler(new Vector3((Math.random() * (Math.PI * 2)), 0, 0));
 
         const shape = spawnPrimitive.cube(pos.add(new Vector3(x, y, z)), new Vector3(1, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Static", undefined);
@@ -145,9 +145,7 @@ function spawnPaintableSculpture(pos: Vector3) {
         })
     }
 
-    Async.setInterval(() => {
-        overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, Math.PI / 2, 0)), 1_000);
-    }, 1_000);
+    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, Math.PI / 2, 0)), 3_000);
 }
 
 
