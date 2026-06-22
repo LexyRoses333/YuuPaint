@@ -39,7 +39,7 @@ async function start() {
     spawnArtStudio(new Vector3(20, 0.25, -20));
 
     //Sculpture
-    spawnPaintableSculpture(new Vector3(10, 0, 12));
+    spawnPaintableSculpture(new Vector3(15, 0, 15));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -119,23 +119,23 @@ function spawnArtStudio(pos: Vector3) {
 
 function spawnPaintableSculpture(pos: Vector3) {
     const maxRadius = 5;
-    const maxHeight = 10;
+    const maxHeight = 15;
     const centerpieceScale = new Vector3(3, 3, 3);
     const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2) + 4, 0);
 
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.75), 0.7, true, 'Animated', undefined);
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
         const y = Math.random() * maxHeight;
         const z = (Math.random() * 2 - 1) * maxRadius;
-        const randRot = Quaternion.fromEuler(new Vector3(0, (Math.random() * (Math.PI * 2)), 0));
+        const randRot = Quaternion.fromEuler(new Vector3((Math.random() * (Math.PI * 2)), 0, 0));
 
-        spawnPrimitive.cone(6, pos.add(new Vector3(x, y, z)), (Math.random() * 6), randRot, Color.randomHue(), 0.95, "Convex", "Static", undefined);
+        spawnPrimitive.cube(pos.add(new Vector3(x, y, z)), new Vector3(2, ((Math.random() * 8) + 1), 2), randRot, Color.randomHue(), 0.95, true, "Static", undefined);
     }
 
-    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), 1_000);
+    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, 1, 0)), 1_000);
 }
 
 
