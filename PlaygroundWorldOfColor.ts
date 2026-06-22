@@ -22,19 +22,19 @@ import { Texture } from "./Yuu API/Texture";
 const groundColor = new Color(0, 0.349, 0.337);
 const patioColor = new Color(0.620, 0.792, 0.475);
 const waterColor = new Color(0.098, 0.698, 0.682);
-const rockColor = Color.randomHue(0.25, 0.25); 
+const rockColor = Color.randomHue(0.25, 0.35);
 const skyColor = new Color(0.561, 0.486, 0.522);  //maybe use a randHue as well?
 
 registerStart(start);
 async function start() {
     //Paintable ground 
-    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(40, 40, 40), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 1024); //check scale placement for collider
-    
+    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048); //check scale placement for collider
+
     Paint.properties.color.set(patioColor);
-    Paint.properties.radius.set(80);
+    Paint.properties.radius.set(50);
 
     //Painting Studio
-    spawnArtStudio(new Vector3(20, 0.5, 20));
+    spawnArtStudio(new Vector3(20, 0.25, 20));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -47,7 +47,7 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 
     plane.mesh.texture.isPaintable.set(true);
 
-     return plane;
+    return plane;
 }
 
 function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -60,7 +60,7 @@ function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, colo
 
     cube.mesh.texture.isPaintable.set(true);
 
-     return cube;
+    return cube;
 }
 
 function createPaintableSphere(pos: Vector3, columns: number, diameter: number, color: Color, alpha: number, pixels: number): Entity {
@@ -81,29 +81,32 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 
     cone.mesh.texture.set(new Texture(pixels, pixels), false);
     cone.mesh.texture.setMipMaps(false);
-    
+
     cone.mesh.color.set(color, alpha);
 
     cone.mesh.texture.isPaintable.set(true);
 
-     return cone;
+    return cone;
 }
 
 function spawnArtStudio(pos: Vector3) {
-    const patio = createPaintableCube(pos, new Vector3(10, 0.3, 10), Quaternion.one, patioColor, 1, 2048);
+    const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), patioColor, 1, 2048);
 
     const poleScale = new Vector3(0.25, 6, 0.25);
-    
+    const roofThickness = 0.35;
+    const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
+    const roofHeight = poleScale.y + (roofThickness / 2);
+
     spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
     spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, 5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
     spawnPrimitive.cube(pos.add(new Vector3(-5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
     spawnPrimitive.cube(pos.add(new Vector3(5, poleScale.y / 2, -5)), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
-    spawnPrimitive.cube(pos.add(new Vector3(0, poleScale.y , 0)), patio.scale.multiply(1.2), Quaternion.one, rockColor, 1, true, "Static", patio); //roof
-    
+    spawnPrimitive.cube(pos.add(new Vector3(0, roofHeight, 0)), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
+
     playgroundDemos.canvas(pos.add(new Vector3(-2, 0.75, 3)), Quaternion.one, Vector3.one);
     playgroundDemos.canvas(pos.add(new Vector3(4, 0.75, 3.25)), Quaternion.one, new Vector3(1.25, 1.25, 1.25));
-    
+
     playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
     //Spawn buttons
 }
