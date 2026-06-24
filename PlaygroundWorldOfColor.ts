@@ -159,13 +159,14 @@ function cubeTest(pos: Vector3) {
 
     // Test 1
     Async.setTimeout(() => {
-        cube.pos = new Vector3(0, 10, 0);
+        cube.pos = pos.add(new Vector3(0, 10, 0));
         cube.rot = Quaternion.fromEuler(new Vector3(0, Math.random() * Math.PI, 0));
     }, 5_000);
 
     // Test 2
     Async.setTimeout(() => {
         overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3(0, Math.random() * Math.PI, 0)), 5_500);
+        overTime.moveTo.start(cube, pos, 5_500);
     }, 8_000);
 }
 
