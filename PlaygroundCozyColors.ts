@@ -131,6 +131,8 @@ function spawnInteractiveSculpture(pos: Vector3) {
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceStartScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
 
+    overTime.scaleTo.start(centerpiece, centerpieceEndScale, 10_000);
+
     Async.setInterval(() => {
         overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
 
@@ -140,7 +142,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
     for (let i = 0; i < 15; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
-        const y = (Math.random() * maxHeight) + 1;
+        const y = (Math.random() * maxHeight) + 0.25;
         const z = (Math.random() * 2 - 1) * maxRadius;
         const startPos = pos.add(new Vector3(x, y, z));
 
@@ -153,14 +155,14 @@ function spawnInteractiveSculpture(pos: Vector3) {
         cube.rayClick.initialize(false);
         cube.rayClick.setClickFunction(() => {
             cube.mesh.color.set(Color.randomHue(), 0.5);
-            
+
             Async.clearTimer(asyncID);
 
             overTime.moveTo.cancel(cube);
             overTime.rotateTo.cancel(cube);
 
             overTime.moveTo.start(cube, pos, 5_000);
-            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), 0, 0)), 5_000);
+            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), 0, (Math.random() * Math.PI))), 5_000);
 
             asyncID = Async.setTimeout(() => {
                 overTime.moveTo.start(cube, startPos, 5_000);
