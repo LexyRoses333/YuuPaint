@@ -39,10 +39,10 @@ async function start() {
     spawnArtStudio(new Vector3(20, 0.25, -20));
 
     //Sculpture
-    spawnPaintableSculpture(new Vector3(15, 0, 15));
+    spawnInteractiveSculpture(new Vector3(15, 0, 15));
 
     //CubeTest
-    cubeTest(new Vector3(-5, 2, -5));
+    spawnMovingCube(new Vector3(-5, 2, -5));
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
@@ -120,50 +120,66 @@ function spawnArtStudio(pos: Vector3) {
     lexy.spawnDrawSettingButtons(pos.add(new Vector3(0, 1.5, -3.25)));
 }
 
-function spawnPaintableSculpture(pos: Vector3) {
+function spawnInteractiveSculpture(pos: Vector3) {
     const maxRadius = 5;
     const maxHeight = 15;
-    const centerpieceScale = new Vector3(2, 15, 2);
-    const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2), 0);
+    const centerpieceStartScale = new Vector3(2, 15, 2);
+    const centerpieceEndScale = new Vector3(0.5, 5, 0.5);
+    const centerpieceOffset = new Vector3(0, (centerpieceStartScale.y / 2), 0);
+    let isStartScale = true;
 
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
-    const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
+    const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceStartScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
+
+    Async.setInterval(() => {
+        overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
+
+        isStartScale != isStartScale;
+    }, 10_000);
+
 
     for (let i = 0; i < 15; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
-        const y = Math.random() * maxHeight;
+        const y = (Math.random() * maxHeight) + 1;
         const z = (Math.random() * 2 - 1) * maxRadius;
-        const randRot = Quaternion.fromEuler(new Vector3((Math.random() * (Math.PI * 2)), 0, 0));
+        const startPos = pos.add(new Vector3(x, y, z));
 
-        const shape = spawnPrimitive.cube(pos.add(new Vector3(x, y, z)), new Vector3(1, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Static", undefined);
+        const randRot = Quaternion.fromEuler(new Vector3(0, (Math.random() * Math.PI), 0));
 
-        shape.rayClick.initialize(false);
+        const cube = spawnPrimitive.cube(startPos, new Vector3(0.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Animated", undefined);
 
-        shape.rayClick.setClickFunction(() => {
-            shape.mesh.color.set(Color.randomHue(), 0.5);
-        })
+        let asyncID = 0;
 
-        shape.rayClick.setHeldFunction(() => {
-            overTime.rotateTo.start(shape, randRot, 500);
-        })
+        cube.rayClick.initialize(false);
+        cube.rayClick.setClickFunction(() => {
+            Async.clearTimer(asyncID);
+
+            overTime.moveTo.cancel(cube);
+            overTime.rotateTo.cancel(cube);
+
+            overTime.moveTo.start(cube, pos, 5_000);
+            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3(0, (Math.random() * Math.PI), 0)), 5_000);
+
+            asyncID = Async.setTimeout(() => {
+                overTime.moveTo.start(cube, startPos, 5_000);
+                overTime.rotateTo.start(cube, randRot, 5_000);
+            }, 8_000);
+        });
+
+        cube.rayClick.setHeldFunction(() => { cube.mesh.color.set(Color.randomHue(), 0.5); });
     }
-
-    overTime.rotateTo.start(centerpiece, Quaternion.fromEuler(new Vector3(0, Math.PI / 2, 0)), 3_000);
 }
 
 
-function cubeTest(pos: Vector3) {
+function spawnMovingCube(pos: Vector3) {
 
     const cube = spawnPrimitive.cube(pos, Vector3.one, Quaternion.one, Color.randomHue(), 1, true, "Static", undefined);
 
-
-    // Test 1
     Async.setTimeout(() => {
         cube.pos = pos.add(new Vector3(0, 10, 0));
         cube.rot = Quaternion.fromEuler(new Vector3(0, Math.random() * Math.PI, 0));
     }, 5_000);
 
-    // Test 2
     Async.setTimeout(() => {
         overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3(0, Math.random() * Math.PI, 0)), 5_500);
         overTime.moveTo.start(cube, pos, 5_500);
