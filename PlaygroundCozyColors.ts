@@ -131,13 +131,13 @@ function spawnInteractiveSculpture(pos: Vector3) {
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceStartScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
 
-    overTime.scaleTo.start(centerpiece, centerpieceEndScale, 10_000);
+    // overTime.scaleTo.start(centerpiece, centerpieceEndScale, 10_000);
 
-    Async.setInterval(() => {
-        overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
+    // Async.setInterval(() => {
+    //     overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
 
-        isStartScale != isStartScale; //only scaled once
-    }, 10_000);
+    //     isStartScale != isStartScale; //only scaled once
+    // }, 10_000);
 
 
     for (let i = 0; i < 15; i++) {
