@@ -121,24 +121,15 @@ function spawnArtStudio(pos: Vector3) {
 }
 
 function spawnInteractiveSculpture(pos: Vector3) {
-    const maxRadius = 5;
+    const maxRadius = 6;
     const maxHeight = 15;
-    const centerpieceStartScale = new Vector3(2, 15, 2);
-    const centerpieceEndScale = new Vector3(0.5, 5, 0.5);
-    const centerpieceOffset = new Vector3(0, (centerpieceStartScale.y / 2), 0);
-    let isStartScale = true;
+    const centerpieceScale = new Vector3(2, 15, 2);
+    const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2), 0);
 
     // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
-    const centerpiece = spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceStartScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Animated', undefined);
-
-    // overTime.scaleTo.start(centerpiece, centerpieceEndScale, 10_000);
-
-    // Async.setInterval(() => {
-    //     overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
-
-    //     isStartScale != isStartScale; //only scaled once
-    // }, 10_000);
-
+    spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(0, 5, -2)), new Vector3(1.5, 10, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(-2, 3, 0)), new Vector3(1, 6, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
 
     for (let i = 0; i < 15; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
@@ -146,7 +137,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
         const z = (Math.random() * 2 - 1) * maxRadius;
         const startPos = pos.add(new Vector3(x, y, z));
 
-        const randRot = Quaternion.fromEuler(new Vector3(0, (Math.random() * Math.PI), 0));
+        const randRot = Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), (Math.random() * Math.PI), (Math.random() * Math.PI)));
 
         const cube = spawnPrimitive.cube(startPos, new Vector3(0.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Animated", undefined);
 
@@ -162,7 +153,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
             overTime.rotateTo.cancel(cube);
 
             overTime.moveTo.start(cube, pos, 5_000);
-            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), 0, (Math.random() * Math.PI))), 5_000);
+            overTime.rotateTo.start(cube, Quaternion.one, 5_000);
 
             asyncID = Async.setTimeout(() => {
                 overTime.moveTo.start(cube, startPos, 5_000);
@@ -174,7 +165,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
 
 function spawnMovingCube(pos: Vector3) {
-
+    //Turn this into a hide and seek game... use cool magic shader, randomly moves in world and shrinks until it moves again-- find it and catch it to trigger something cool
     const cube = spawnPrimitive.cube(pos, Vector3.one, Quaternion.one, Color.randomHue(), 1, true, "Static", undefined);
 
     Async.setTimeout(() => {
@@ -190,7 +181,7 @@ function spawnMovingCube(pos: Vector3) {
 
 
 
-//Paintable sculpture
+//Interactive sculpture
 
 //New Brush shapes?
 
