@@ -134,7 +134,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
     Async.setInterval(() => {
         overTime.scaleTo.start(centerpiece, isStartScale ? centerpieceEndScale : centerpieceStartScale, 10_000);
 
-        isStartScale != isStartScale;
+        isStartScale != isStartScale; //only scaled once
     }, 10_000);
 
 
@@ -152,21 +152,21 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
         cube.rayClick.initialize(false);
         cube.rayClick.setClickFunction(() => {
+            cube.mesh.color.set(Color.randomHue(), 0.5);
+            
             Async.clearTimer(asyncID);
 
             overTime.moveTo.cancel(cube);
             overTime.rotateTo.cancel(cube);
 
             overTime.moveTo.start(cube, pos, 5_000);
-            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3(0, (Math.random() * Math.PI), 0)), 5_000);
+            overTime.rotateTo.start(cube, Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), 0, 0)), 5_000);
 
             asyncID = Async.setTimeout(() => {
                 overTime.moveTo.start(cube, startPos, 5_000);
                 overTime.rotateTo.start(cube, randRot, 5_000);
             }, 8_000);
         });
-
-        cube.rayClick.setHeldFunction(() => { cube.mesh.color.set(Color.randomHue(), 0.5); });
     }
 }
 
