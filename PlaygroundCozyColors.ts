@@ -81,7 +81,7 @@ function rotateSphere(entity: Entity, durMs: number) {
 function spawnArtStudio(pos: Vector3) {
     const patioScale = new Vector3(10, 0.4, 10);
     const patio = createPaintableCube(pos, patioScale, Quaternion.one, patioColor, 1, 2048); //not paintable yet?
-    createPaintablePlane(new Vector3(0, 0.001, 0), new Vector3(patioScale.x, patioScale.z, 0.01), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048, patio);
+    createPaintablePlane(new Vector3(0, (patioScale.y / 2) + 0.001, 0), new Vector3(patioScale.x, patioScale.z, 0.01), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048, patio);
 
     patio.rayClick.initialize(false);
     patio.rayClick.setClickFunction(() => { patio.mesh.color.set(Color.randomHue(0.55, 0.35), 1); });
