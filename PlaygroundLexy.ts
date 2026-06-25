@@ -17,7 +17,7 @@ export const lexy = {
 }
 
 function spawnDrawSettingButtons(pos: Vector3) {
-  const backgroundPlane = spawnPrimitive.plane('Front', pos.add(new Vector3(0, 0, -0.02)), new Vector3(1.5, 1, 0.02), Quaternion.one, Color.white, 0.05, 'Convex', 'Static', undefined);
+  const backgroundPlane = spawnPrimitive.plane('Front', pos.add(new Vector3(0, 0, -0.02)), new Vector3(1.2, 0.75, 0.02), Quaternion.one, Color.white, 0, 'Convex', 'Static', undefined);
   backgroundPlane.rayClick.initialize(false);
 
   createDrawSettingButton(pos, 'Size', 'px', 512, 1, 0.5, Paint.properties.radius.get, Paint.properties.radius.set);
