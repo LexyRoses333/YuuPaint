@@ -51,9 +51,10 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 
     plane.mesh.texture.set(texture, false);
     plane.mesh.texture.setMipMaps(false);
-    plane.mesh.texture.isPaintable.set(true);
 
     texture.fillWithColor(color, alpha);
+
+    plane.mesh.texture.isPaintable.set(true);
 
     return plane;
 }
@@ -128,11 +129,10 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
     // createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
-    spawnPrimitive.cube(pos.add(new Vector3(0, 5, -2)), new Vector3(1.5, 10, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
-    spawnPrimitive.cube(pos.add(new Vector3(-2, 3, 0)), new Vector3(1, 6, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
-    spawnPrimitive.cube(pos.add(new Vector3(2, 6, 0)), new Vector3(1, 8, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
-    spawnPrimitive.cube(pos.add(new Vector3(0, 2, 2)), new Vector3(1, 4, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
-    //Add another taller to the right, and another shorter back 1 spot. Fix gaps in between these pillars
+    spawnPrimitive.cube(pos.add(new Vector3(0, 5, 2)), new Vector3(1.5, 10, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(-2, 3, 0)), new Vector3(1.5, 6, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(2, 4, 0)), new Vector3(1.5, 8, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(0, 2, -2)), new Vector3(1.5, 4, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
 
     for (let i = 0; i < 15; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
@@ -148,14 +148,18 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
         cube.rayClick.initialize(false);
         cube.rayClick.setClickFunction(() => {
-            cube.mesh.color.set(Color.randomHue(), 0.5);
-
             Async.clearTimer(asyncID);
 
             overTime.moveTo.cancel(cube);
             overTime.rotateTo.cancel(cube);
 
-            overTime.moveTo.start(cube, pos, 5_000);
+            cube.mesh.color.set(Color.randomHue(), 0.5);
+
+            const playerPos = Player.position.get() ?? pos;
+            const dir = playerPos.subtract(startPos).normalize();
+            const newPos = playerPos.subtract(dir);
+
+            overTime.moveTo.start(cube, newPos, 5_000);
             overTime.rotateTo.start(cube, Quaternion.one, 5_000);
 
             asyncID = Async.setTimeout(() => {
