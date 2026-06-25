@@ -47,26 +47,26 @@ async function start() {
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
     const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
+    const texture = new Texture(pixels, pixels);
 
-    plane.mesh.texture.set(new Texture(pixels, pixels), false);
+    plane.mesh.texture.set(texture, false);
     plane.mesh.texture.setMipMaps(false);
-
-    plane.mesh.color.set(color, alpha);
-
     plane.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
 
     return plane;
 }
 
 function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
     const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);  //doesnt have Concave ability for box collider?? Not paintable in world
+    const texture = new Texture(pixels, pixels);
 
-    cube.mesh.texture.set(new Texture(pixels, pixels), false);
+    cube.mesh.texture.set(texture, false);
     cube.mesh.texture.setMipMaps(false);
-
-    cube.mesh.color.set(color, alpha);
-
     cube.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
 
     return cube;
 }
@@ -123,13 +123,16 @@ function spawnArtStudio(pos: Vector3) {
 function spawnInteractiveSculpture(pos: Vector3) {
     const maxRadius = 6;
     const maxHeight = 15;
-    const centerpieceScale = new Vector3(2, 15, 2);
+    const centerpieceScale = new Vector3(2.5, 15, 2.5);
     const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2), 0);
 
-    // const centerpiece = createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
+    // createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
     spawnPrimitive.cube(pos.add(new Vector3(0, 5, -2)), new Vector3(1.5, 10, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
     spawnPrimitive.cube(pos.add(new Vector3(-2, 3, 0)), new Vector3(1, 6, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(2, 6, 0)), new Vector3(1, 8, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    spawnPrimitive.cube(pos.add(new Vector3(0, 2, 2)), new Vector3(1, 4, 1), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
+    //Add another taller to the right, and another shorter back 1 spot. Fix gaps in between these pillars
 
     for (let i = 0; i < 15; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
@@ -139,7 +142,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
         const randRot = Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), (Math.random() * Math.PI), (Math.random() * Math.PI)));
 
-        const cube = spawnPrimitive.cube(startPos, new Vector3(0.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Animated", undefined);
+        const cube = spawnPrimitive.cube(startPos, new Vector3(1.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Animated", undefined);
 
         let asyncID = 0;
 
@@ -180,8 +183,6 @@ function spawnMovingCube(pos: Vector3) {
 }
 
 
-
-//Interactive sculpture
 
 //New Brush shapes?
 
