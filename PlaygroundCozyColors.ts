@@ -107,17 +107,18 @@ function spawnArtStudio(pos: Vector3) {
 
     poles.forEach((entity) => {
         entity.rayClick.initialize(false);
-        const newColor = Color.randomHue(0.55, 0.35);
-
+        
         entity.rayClick.setClickFunction(() => {
+            const newColor = Color.randomHue(0.55, 0.35);
+
             poles.forEach((pole) => {
                 pole.mesh.color.set(newColor, 1);
             });
         });
     });
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, pos.y + 1, -3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(2, pos.y + 1, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(-2, pos.y + 0.9, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(2, pos.y + 0.9, -3)), Quaternion.one, Vector3.one);
 
     createPaintableCone(pos.add(new Vector3(2, 0.2, 3)), 8, 5, Quaternion.one, groundColor, 1, 1048); //Not paintable yet
 
