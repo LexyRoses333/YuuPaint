@@ -75,26 +75,28 @@ function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, colo
 
 function createPaintableSphere(pos: Vector3, columns: number, diameter: number, color: Color, alpha: number, pixels: number): Entity {
     const sphere = spawnPrimitive.sphere(columns, 16, pos, diameter, Quaternion.one, color, alpha, 'Concave', 'Static', undefined);
+    const texture = new Texture(pixels, pixels);
 
-    sphere.mesh.texture.set(new Texture(pixels, pixels), false);
+    sphere.mesh.texture.set(texture, false);
     sphere.mesh.texture.setMipMaps(false);
-
-    sphere.mesh.color.set(color, alpha);
-
     sphere.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
 
     return sphere;
 }
 
 function createPaintableCone(pos: Vector3, columns: number, diameter: number, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
     const cone = spawnPrimitive.cone(columns, pos, diameter, rot, color, alpha, 'Convex', 'Static', undefined);  //no "Concave" option-- check for issues with paintability
+    const texture = new Texture(pixels, pixels);
 
-    cone.mesh.texture.set(new Texture(pixels, pixels), false);
+    cone.mesh.texture.set(texture, false);
     cone.mesh.texture.setMipMaps(false);
-
-    cone.mesh.color.set(color, alpha);
-
     cone.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
 
     return cone;
 }
@@ -109,10 +111,10 @@ function spawnArtStudio(pos: Vector3) {
 
     spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
     spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
-    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
-    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
+    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), new Vector3(0.25, 5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //front left
+    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), new Vector3(0.25, 4.5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
-    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
+    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI/12, 0, 0)), Color.randomHue(0.65, 0.2), 1, true, "Static", patio); //roof
 
     playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
     playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
@@ -158,14 +160,14 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
             const playerPos = Player.position.get() ?? pos;
             const dir = playerPos.subtract(startPos).normalize();
-            const newPos = playerPos.subtract(dir);
+            const newPos = playerPos.subtract(dir.multiply(1.5));
 
             overTime.moveTo.start(cube, newPos, 5_000);
             // overTime.rotateTo.start(cube, Quaternion.one, 5_000);
 
             asyncID = Async.setTimeout(() => {
                 overTime.moveTo.start(cube, startPos, 5_000);
-                overTime.rotateTo.start(cube, randRot, 5_000);
+                // overTime.rotateTo.start(cube, randRot, 5_000);
             }, 8_000);
         });
     }
