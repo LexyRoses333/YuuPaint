@@ -193,44 +193,44 @@ function fillStar(shapeFuncProperties: ShapeFuncProperties, isStar: boolean) {
 }
 
 
-function fillTriangle(shapeFuncProperties: ShapeFuncProperties) {
-  const pixels: Vector2[] = [];
-
-  const centerPixel = shapeFuncProperties.brushStartPixel.add(new Vector2(shapeFuncProperties.radius, shapeFuncProperties.radius));
-
-  const apexVertX = 0, apexVertY = -shapeFuncProperties.radius;
-  const bottomLeftX = -shapeFuncProperties.radius, bottomLeftY = shapeFuncProperties.radius;
-  const bottomRightX = shapeFuncProperties.radius, bottomRightY = shapeFuncProperties.radius;
-
-  for (let x = -shapeFuncProperties.radius; x <= shapeFuncProperties.radius; x++) {
-    for (let y = -shapeFuncProperties.radius; y <= shapeFuncProperties.radius; y++) {
-      if (isInsideTriangle(apexVertX, apexVertY, bottomLeftX, bottomLeftY, bottomRightX, bottomRightY, x, y)) {
-        pixels.push(centerPixel.add(new Vector2(x, y)));
-      }
-    }
-  }
-
-  shapeFuncProperties.brushTexture.setPixelsColor(pixels, shapeFuncProperties.color, shapeFuncProperties.alpha);
-}
-
-
-//Alt version, seemingly more optimized. 
-// function fillTriangle(shapeFuncProperties: ShapeFuncProperties) {
+// function fillTriangle(shapeFuncProperties: ShapeFuncProperties) {  //updside down
 //   const pixels: Vector2[] = [];
 
 //   const centerPixel = shapeFuncProperties.brushStartPixel.add(new Vector2(shapeFuncProperties.radius, shapeFuncProperties.radius));
-//   const diameter = shapeFuncProperties.radius * 2;
 
-//   for (let y = -shapeFuncProperties.radius; y <= shapeFuncProperties.radius; y++) {
-//     const halfWidth = ((y + shapeFuncProperties.radius) * shapeFuncProperties.radius / diameter) | 0;
+//   const apexVertX = 0, apexVertY = -shapeFuncProperties.radius;
+//   const bottomLeftX = -shapeFuncProperties.radius, bottomLeftY = shapeFuncProperties.radius;
+//   const bottomRightX = shapeFuncProperties.radius, bottomRightY = shapeFuncProperties.radius;
 
-//     for (let x = -halfWidth; x <= halfWidth; x++) {
-//       pixels.push(centerPixel.add(new Vector2(x, y)));
+//   for (let x = -shapeFuncProperties.radius; x <= shapeFuncProperties.radius; x++) {
+//     for (let y = -shapeFuncProperties.radius; y <= shapeFuncProperties.radius; y++) {
+//       if (isInsideTriangle(apexVertX, apexVertY, bottomLeftX, bottomLeftY, bottomRightX, bottomRightY, x, y)) {
+//         pixels.push(centerPixel.add(new Vector2(x, y)));
+//       }
 //     }
 //   }
 
 //   shapeFuncProperties.brushTexture.setPixelsColor(pixels, shapeFuncProperties.color, shapeFuncProperties.alpha);
 // }
+
+
+// Alt version, seemingly more optimized. 
+function fillTriangle(shapeFuncProperties: ShapeFuncProperties) {
+  const pixels: Vector2[] = [];
+
+  const centerPixel = shapeFuncProperties.brushStartPixel.add(new Vector2(shapeFuncProperties.radius, shapeFuncProperties.radius));
+  const diameter = shapeFuncProperties.radius * 2;
+
+  for (let y = -shapeFuncProperties.radius; y <= shapeFuncProperties.radius; y++) {
+    const halfWidth = ((y + shapeFuncProperties.radius) * shapeFuncProperties.radius / diameter) | 0;
+
+    for (let x = -halfWidth; x <= halfWidth; x++) {
+      pixels.push(centerPixel.add(new Vector2(x, y)));
+    }
+  }
+
+  shapeFuncProperties.brushTexture.setPixelsColor(pixels, shapeFuncProperties.color, shapeFuncProperties.alpha);
+}
 
 function fillHeart(shapeFuncProperties: ShapeFuncProperties) {
   const pixels: Vector2[] = [];
@@ -269,7 +269,7 @@ function fillLine(shapeFuncProperties: ShapeFuncProperties) {
   const centerPixel = shapeFuncProperties.brushStartPixel.add(new Vector2(shapeFuncProperties.radius, shapeFuncProperties.radius));
 
   const orientation = shapeFuncProperties.lineOrientation ?? 'Slash';
-  const halfThickness = (shapeFuncProperties.lineThickness ?? 2) / 2;
+  const halfThickness = (shapeFuncProperties.lineThickness ?? 8) / 2;
   const halfThicknessSq = halfThickness * halfThickness;
 
   let isValid = false;

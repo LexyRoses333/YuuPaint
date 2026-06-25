@@ -81,10 +81,10 @@ function rotateSphere(entity: Entity, durMs: number) {
 function spawnArtStudio(pos: Vector3) {
     const patioScale = new Vector3(10, 0.4, 10);
     const patio = createPaintableCube(pos, patioScale, Quaternion.one, patioColor, 1, 2048); //not paintable yet?
-    createPaintablePlane(pos.add(new Vector3(0, patioScale.y + 0.02, 0)), patioScale, Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
+    createPaintablePlane(pos.add(new Vector3(0, patioScale.y + 0.001, 0)), new Vector3(patioScale.x, patioScale.z, patioScale.y), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
 
     patio.rayClick.initialize(false);
-    patio.rayClick.setClickFunction(() => {Color.randomHue(0.55, 0.35); });
+    patio.rayClick.setClickFunction(() => { patio.mesh.color.set(Color.randomHue(0.55, 0.35), 1); });
 
     const poleScaleShort = new Vector3(0.25, 5, 0.25);
     const poleScaleTall = new Vector3(0.25, 7.5, 0.25);
@@ -94,7 +94,7 @@ function spawnArtStudio(pos: Vector3) {
 
     const roof = spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI / 12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
     roof.rayClick.initialize(false);
-    roof.rayClick.setClickFunction(() => {Color.randomHue(0.55, 0.35); });
+    roof.rayClick.setClickFunction(() => { roof.mesh.color.set(Color.randomHue(0.55, 0.35), 1); });
 
     const pole1 = spawnPrimitive.cube(new Vector3(-4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short left
     const pole2 = spawnPrimitive.cube(new Vector3(4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short right
@@ -107,9 +107,10 @@ function spawnArtStudio(pos: Vector3) {
 
     poles.forEach((entity) => {
         entity.rayClick.initialize(false);
+
         entity.rayClick.setClickFunction(() => {
-            poles.forEach(() => {
-                entity.mesh.color.set(Color.randomHue(0.55, 0.35), 1);
+            poles.forEach((pole) => {
+                pole.mesh.color.set(Color.randomHue(0.55, 0.35), 1);
             });
         });
     });
