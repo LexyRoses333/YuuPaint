@@ -33,7 +33,7 @@ async function start() {
     updateSkydome();
 
     //Paintable ground 
-    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048); //check scale placement for collider
+    createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048, undefined); //check scale placement for collider
 
     Paint.properties.color.set(Color.randomHue(0.75, 0.8));
     Paint.properties.radius.set(30);
@@ -81,7 +81,7 @@ function rotateSphere(entity: Entity, durMs: number) {
 function spawnArtStudio(pos: Vector3) {
     const patioScale = new Vector3(10, 0.4, 10);
     const patio = createPaintableCube(pos, patioScale, Quaternion.one, patioColor, 1, 2048); //not paintable yet?
-    createPaintablePlane(pos, new Vector3(patioScale.x, patioScale.z, 0.01), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
+    createPaintablePlane(new Vector3(0, 0.001, 0), new Vector3(patioScale.x, patioScale.z, 0.01), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048, patio);
 
     patio.rayClick.initialize(false);
     patio.rayClick.setClickFunction(() => { patio.mesh.color.set(Color.randomHue(0.55, 0.35), 1); });
@@ -107,10 +107,10 @@ function spawnArtStudio(pos: Vector3) {
 
     poles.forEach((entity) => {
         entity.rayClick.initialize(false);
+        const newColor = Color.randomHue(0.55, 0.35);
 
         entity.rayClick.setClickFunction(() => {
             poles.forEach((pole) => {
-                const newColor = Color.randomHue(0.55, 0.35);
                 pole.mesh.color.set(newColor, 1);
             });
         });
@@ -199,8 +199,8 @@ function spawnLandscape() {
     //Clouds, overTime
 }
 
-function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
+function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number, parent: Entity | undefined): Entity {
+    const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", parent);
     const texture = new Texture(pixels, pixels);
 
     plane.mesh.texture.set(texture, false);
