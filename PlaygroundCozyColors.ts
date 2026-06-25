@@ -22,7 +22,7 @@ import { SkyDome } from "./Yuu API/SkyDome";
 // }
 
 //Color Scheme
-const groundColor = new Color(0.016, 0.58, 0.561);  //darker, less sat
+const groundColor = new Color(0.004, 0.349, 0.337); 
 const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
 const rockColor = Color.randomHue(0.75, 0.45);
@@ -61,7 +61,7 @@ function updateSkydome() {
 }
 
 function spawnSpinningGlobe(pos: Vector3) {
-     createPaintableCone(pos.add(new Vector3(0, -1.5, 0)), 8, 5, Quaternion.fromEuler(new Vector3(Math.PI, 0, 0)), groundColor, 1, 1048);
+     createPaintableCone(pos.add(new Vector3(0, -1.5, 0)), 8, 5, Quaternion.fromEuler(new Vector3(Math.PI, 0, 0)), skyColor, 1, 1048);
 
     const spinningSphere = createPaintableSphere(pos.add(new Vector3(0, 3, 0)), 16, 4, waterColor, 1, 2048);
     // spinningSphere.rot = Quaternion.fromEuler(new Vector3(0, 0, Math.PI / 2));
