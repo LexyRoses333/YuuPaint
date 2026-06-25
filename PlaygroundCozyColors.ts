@@ -17,17 +17,16 @@ import { overTime } from "./Yuu API/MotionOverTime";
 import { SkyDome } from "./Yuu API/SkyDome";
 
 
-// export const worldOfColor = {
-//     spawnArtStudio,
-// }
 
 //Color Scheme
 const groundColor = new Color(0.133, 0.42, 0.345);
 const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
-const rockColor = Color.randomHue(0.75, 0.45);
-const skyColor = new Color(0.773, 0.506, 0.941);  //maybe use a randHue as well?
+const rockColor = Color.randomHue(0.55, 0.45);
+const skyColor = new Color(0.702, 0.275, 0.969);
 const horizonColor = new Color(1, 0.702, 0.471);
+
+
 
 registerStart(start);
 async function start() {
@@ -54,9 +53,7 @@ async function start() {
 }
 
 function updateSkydome() {
-    // SkyDome.ambientLight.baseColor.set(horizonColor);
     SkyDome.ambientLight.skyColorContribution.set(0.98);
-
     SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, horizonColor, 0.2, skyColor, horizonColor, 0.15);
 }
 
@@ -84,14 +81,14 @@ function rotateSphere(entity: Entity, durMs: number) {
 function spawnArtStudio(pos: Vector3) {
     const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.one, patioColor, 1, 2048);
 
-    const poleScaleShort = new Vector3(0.25, 4, 0.25);
+    const poleScaleShort = new Vector3(0.25, 5, 0.25);
     const poleScaleTall = new Vector3(0.25, 7, 0.25);
     const roofThickness = 0.35;
     const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
     const roofHeight = ((poleScaleTall.y + poleScaleShort.y) / 2) + (roofThickness / 2);
 
-    spawnPrimitive.cube(new Vector3(-4.5, 3, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short left
-    spawnPrimitive.cube(new Vector3(4.5, 3, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short right
+    spawnPrimitive.cube(new Vector3(-4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short left
+    spawnPrimitive.cube(new Vector3(4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short right
     spawnPrimitive.cube(new Vector3(-4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall left
     spawnPrimitive.cube(new Vector3(4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall right
 
@@ -177,6 +174,7 @@ function spawnLandscape() {
     //Dist mountains with cones
     //waterfall rocks
     //Perimeter rocks
+    //Clouds, overTime
 }
 
 function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
