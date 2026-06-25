@@ -14,6 +14,7 @@ import { spawnPrimitive } from "./Yuu API/SpawnPrimitive";
 import { Texture } from "./Yuu API/Texture";
 import { lexy } from "./PlaygroundLexy";
 import { overTime } from "./Yuu API/MotionOverTime";
+import { SkyDome } from "./Yuu API/SkyDome";
 
 
 // export const worldOfColor = {
@@ -21,14 +22,16 @@ import { overTime } from "./Yuu API/MotionOverTime";
 // }
 
 //Color Scheme
-const groundColor = new Color(0, 0.349, 0.337);
+const groundColor = new Color(0.016, 0.58, 0.561);
 const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
 const rockColor = Color.randomHue(0.75, 0.35);
-const skyColor = new Color(0.561, 0.486, 0.522);  //maybe use a randHue as well?
+const skyColor = new Color(0.773, 0.506, 0.941);  //maybe use a randHue as well?
 
 registerStart(start);
 async function start() {
+    updateSkydome();
+
     //Paintable ground 
     createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048); //check scale placement for collider
 
@@ -47,6 +50,11 @@ async function start() {
 
     //Paintable rotating sphere
     spawnSpinningGlobe(new Vector3(0, 0.75, 0));
+}
+
+function updateSkydome() {
+    // SkyDome.ambientLight.baseColor.set(skyColor);
+    SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, new Color(0.804, 0.651, 0.902), 0.2, new Color(0.969, 0.69, 0.039), skyColor, 0.75);
 }
 
 function spawnSpinningGlobe(pos: Vector3) {
@@ -102,7 +110,6 @@ function spawnInteractiveSculpture(pos: Vector3) {
     const centerpieceScale = new Vector3(2.5, 15, 2.5);
     const centerpieceOffset = new Vector3(0, (centerpieceScale.y / 2), 0);
 
-    // createPaintableCube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.fromEuler(new Vector3(0.9, 0, 0.7)), Color.randomHue(0.85, 0.5), 0.8, 1048);
     spawnPrimitive.cube(pos.add(centerpieceOffset), centerpieceScale, Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
     spawnPrimitive.cube(pos.add(new Vector3(0, 5, 2)), new Vector3(1.5, 10, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
     spawnPrimitive.cube(pos.add(new Vector3(-2, 3, 0)), new Vector3(1.5, 6, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
@@ -117,7 +124,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
 
         const randRot = Quaternion.fromEuler(new Vector3((Math.random() * Math.PI), (Math.random() * Math.PI), (Math.random() * Math.PI)));
 
-        const cube = spawnPrimitive.cube(startPos, new Vector3(1.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Animated", undefined);
+        const cube = spawnPrimitive.cube(startPos, new Vector3(1.5, ((Math.random() * 3) + 1), 1), randRot, Color.randomHue(), 0.5, true, "Static", undefined);
 
         let asyncID = 0;
 
@@ -235,7 +242,7 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 
 //Rainbow Stairs
 
-//Reactive ground plane -- paintable with foot pos spray brush, then reverts back to prev color after delay, secret message (ie. pixels that dont change when drawn on = code?)
+//Secret message using text same color as ground plane (code?)
 
 //Color Picker... Moves with you? Appear/ Disappear with B Button?
 
