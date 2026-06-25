@@ -46,15 +46,29 @@ async function start() {
     spawnMovingCube(new Vector3(5, 1, -5));
 
     //Paintable rotating sphere
-    const spinningSphere = createPaintableSphere(new Vector3(0, 2, 0), 16, 4, skyColor, 1, 2048);
-    overTime.rotateTo.start(spinningSphere, Quaternion.fromEuler(new Vector3(0, Math.PI * 2, 0)), 5_000);
+    spawnSpinningGlobe(new Vector3(0, 2, 0));
 }
+
+function spawnSpinningGlobe(pos: Vector3) {
+    const spinningSphere = createPaintableSphere(pos, 16, 5, waterColor, 1, 2048);
+
+    Async.setInterval(() => {
+        rotateSphere(spinningSphere, 8_000);
+    }, 8_000);
+}
+
+function rotateSphere(entity: Entity, durMs: number) {
+    const currentRot = entity.rot;
+    const next = currentRot.multiply(Quaternion.fromEuler(new Vector3(0, Math.PI, 0)));
+
+    overTime.rotateTo.start(entity, next, durMs);
+};
 
 
 function spawnArtStudio(pos: Vector3) {
     const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.one, patioColor, 1, 2048);
 
-    const poleScale = new Vector3(0.25, 6, 0.25);
+    const poleScale = new Vector3(0.25, 7.25, 0.25);
     const roofThickness = 0.35;
     const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
     const roofHeight = poleScale.y + (roofThickness / 2);
@@ -64,7 +78,7 @@ function spawnArtStudio(pos: Vector3) {
     spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
     spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
-    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI/12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
+    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI / 12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
 
     playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
     playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
@@ -153,7 +167,7 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 }
 
 function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined); 
+    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);
     const texture = new Texture(pixels, pixels);
 
     cube.mesh.texture.set(texture, false);
