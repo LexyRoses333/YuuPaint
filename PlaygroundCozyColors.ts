@@ -81,7 +81,7 @@ function rotateSphere(entity: Entity, durMs: number) {
 function spawnArtStudio(pos: Vector3) {
     const patioScale = new Vector3(10, 0.4, 10);
     const patio = createPaintableCube(pos, patioScale, Quaternion.one, patioColor, 1, 2048); //not paintable yet?
-    createPaintablePlane(pos.add(new Vector3(patioScale.y - 0.001, 0, 0)), new Vector3(patioScale.x, patioScale.z, patioScale.y), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
+    createPaintablePlane(pos.add(new Vector3(0, 0, patioScale.y - 0.001)), new Vector3(patioScale.x, patioScale.z, patioScale.y), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
 
     patio.rayClick.initialize(false);
     patio.rayClick.setClickFunction(() => { patio.mesh.color.set(Color.randomHue(0.55, 0.35), 1); });
@@ -116,8 +116,8 @@ function spawnArtStudio(pos: Vector3) {
         });
     });
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, patioScale.y / 2, -3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(2, patioScale.y / 2, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(-2, pos.y + 1, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(2, pos.y + 1, -3)), Quaternion.one, Vector3.one);
 
     createPaintableCone(pos.add(new Vector3(2, 0.2, 3)), 8, 5, Quaternion.one, groundColor, 1, 1048); //Not paintable yet
 
