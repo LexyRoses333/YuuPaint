@@ -22,7 +22,7 @@ import { SkyDome } from "./Yuu API/SkyDome";
 const groundColor = new Color(0.133, 0.42, 0.345);
 const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
-const rockColor = Color.randomHue(0.55, 0.45);
+const rockColor = Color.randomHue(0.55, 0.35);
 const skyColor = new Color(0.702, 0.275, 0.969);
 const horizonColor = new Color(1, 0.702, 0.471);
 
@@ -79,23 +79,43 @@ function rotateSphere(entity: Entity, durMs: number) {
 
 
 function spawnArtStudio(pos: Vector3) {
-    const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.one, patioColor, 1, 2048);
+    const patioScale = new Vector3(10, 0.4, 10);
+    const patio = createPaintableCube(pos, patioScale, Quaternion.one, patioColor, 1, 2048); //not paintable yet?
+    createPaintablePlane(pos.add(new Vector3(0, patioScale.y + 0.02, 0)), patioScale, Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), patioColor, 1, 2048);
+
+    patio.rayClick.initialize(false);
+    patio.rayClick.setClickFunction(() => {Color.randomHue(0.55, 0.35); });
 
     const poleScaleShort = new Vector3(0.25, 5, 0.25);
-    const poleScaleTall = new Vector3(0.25, 7, 0.25);
+    const poleScaleTall = new Vector3(0.25, 7.5, 0.25);
     const roofThickness = 0.35;
-    const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
+    const roofScale = new Vector3(patioScale.x * 1.2, roofThickness, patioScale.z * 1.2);
     const roofHeight = ((poleScaleTall.y + poleScaleShort.y) / 2) + (roofThickness / 2);
 
-    spawnPrimitive.cube(new Vector3(-4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short left
-    spawnPrimitive.cube(new Vector3(4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short right
-    spawnPrimitive.cube(new Vector3(-4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall left
-    spawnPrimitive.cube(new Vector3(4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall right
+    const roof = spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI / 12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
+    roof.rayClick.initialize(false);
+    roof.rayClick.setClickFunction(() => {Color.randomHue(0.55, 0.35); });
 
-    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI / 12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
+    const pole1 = spawnPrimitive.cube(new Vector3(-4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short left
+    const pole2 = spawnPrimitive.cube(new Vector3(4.5, poleScaleShort.y / 2, 4.5), poleScaleShort, Quaternion.one, rockColor, 1, true, "Static", patio); //short right
+    const pole3 = spawnPrimitive.cube(new Vector3(-4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall left
+    const pole4 = spawnPrimitive.cube(new Vector3(4.5, poleScaleTall.y / 2, -4.5), poleScaleTall, Quaternion.one, rockColor, 1, true, "Static", patio); //tall right
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
+    const poles: Entity[] = [];
+
+    poles.push(pole1, pole2, pole3, pole4);
+
+    poles.forEach((entity) => {
+        entity.rayClick.initialize(false);
+        entity.rayClick.setClickFunction(() => {
+            poles.forEach(() => {
+                entity.mesh.color.set(Color.randomHue(0.55, 0.35), 1);
+            });
+        });
+    });
+
+    playgroundDemos.canvas(pos.add(new Vector3(-2, patioScale.y / 2, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(2, patioScale.y / 2, -3)), Quaternion.one, Vector3.one);
 
     createPaintableCone(pos.add(new Vector3(2, 0.2, 3)), 8, 5, Quaternion.one, groundColor, 1, 1048); //Not paintable yet
 
@@ -237,11 +257,11 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 
 
 
-//New Brush shapes?
+//New Brush shapes
 
-//Mountain background
+//Mountain background -- build elevated rock cliff for art studio that overlooks horizon
 
-//Waterfall
+//Waterfall, dock, rolling globe in center? Lilly pads to stand on. Water non-collidable but ground plane so that head stays above water?
 
 //Obby Rocks
 
@@ -253,6 +273,6 @@ function createPaintableCone(pos: Vector3, columns: number, diameter: number, ro
 
 //Color Picker... Moves with you? Appear/ Disappear with B Button?
 
-//Skydome Change
+//Skydome Change - triggered by something?
 
-//Teleport, Sky Obby
+//Teleport, inside waterfall? Clouds?
