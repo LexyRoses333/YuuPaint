@@ -22,11 +22,12 @@ import { SkyDome } from "./Yuu API/SkyDome";
 // }
 
 //Color Scheme
-const groundColor = new Color(0.016, 0.58, 0.561);
+const groundColor = new Color(0.016, 0.58, 0.561);  //darker, less sat
 const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
-const rockColor = Color.randomHue(0.75, 0.35);
+const rockColor = Color.randomHue(0.75, 0.45);
 const skyColor = new Color(0.773, 0.506, 0.941);  //maybe use a randHue as well?
+const horizonColor = new Color(0.929, 0.345, 0.008);
 
 registerStart(start);
 async function start() {
@@ -49,16 +50,19 @@ async function start() {
     spawnMovingCube(new Vector3(5, 1, -5));
 
     //Paintable rotating sphere
-    spawnSpinningGlobe(new Vector3(0, 0.75, 0));
+    spawnSpinningGlobe(new Vector3(0, 0.75, 6));
 }
 
 function updateSkydome() {
-    // SkyDome.ambientLight.baseColor.set(skyColor);
-    SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, new Color(0.804, 0.651, 0.902), 0.2, new Color(0.969, 0.69, 0.039), skyColor, 0.75);
+    SkyDome.ambientLight.baseColor.set(horizonColor);
+    SkyDome.ambientLight.skyColorContribution.set(0.2);
+
+    SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, new Color(0.969, 0.69, 0.039), 0.75, horizonColor, skyColor, 0.25);
 }
 
 function spawnSpinningGlobe(pos: Vector3) {
-    spawnPrimitive.cube(pos, new Vector3(1.5, 1, 1.5), Quaternion.one, rockColor, 0.6, true, 'Static', undefined);
+    // spawnPrimitive.cube(pos, new Vector3(1.5, 1, 1.5), Quaternion.one, rockColor, 0.6, true, 'Static', undefined);
+     createPaintableCone(pos, 8, 5, Quaternion.fromEuler(new Vector3(Math.PI, 0, 0)), groundColor, 0.3, 1048);
 
     const spinningSphere = createPaintableSphere(pos.add(new Vector3(0, 3, 0)), 16, 4, waterColor, 1, 2048);
     spinningSphere.rot = Quaternion.fromEuler(new Vector3(0, 0, Math.PI / 2));
@@ -97,7 +101,7 @@ function spawnArtStudio(pos: Vector3) {
     playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
     playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
 
-    createPaintableCone(pos.add(new Vector3(2, 0.2, 3)), 8, 5, Quaternion.one, groundColor, 1, 1048);
+    createPaintableCone(pos.add(new Vector3(2, 0.2, 3)), 8, 5, Quaternion.one, groundColor, 1, 1048); //Not paintable yet
 
     playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
 
