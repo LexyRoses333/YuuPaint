@@ -50,19 +50,18 @@ async function start() {
     spawnMovingCube(new Vector3(5, 1, -5));
 
     //Paintable rotating sphere
-    spawnSpinningGlobe(new Vector3(0, 0.75, 6));
+    spawnSpinningGlobe(new Vector3(0, 0, -6));
 }
 
 function updateSkydome() {
     SkyDome.ambientLight.baseColor.set(horizonColor);
-    SkyDome.ambientLight.skyColorContribution.set(0.2);
+    SkyDome.ambientLight.skyColorContribution.set(0.95);
 
-    SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, new Color(0.969, 0.69, 0.039), 0.75, horizonColor, skyColor, 0.25);
+    SkyDome.skyMaterial.setProceduralSkyMaterial(skyColor, new Color(0.969, 0.69, 0.039), 0.15, skyColor, horizonColor, 0.95);
 }
 
 function spawnSpinningGlobe(pos: Vector3) {
-    // spawnPrimitive.cube(pos, new Vector3(1.5, 1, 1.5), Quaternion.one, rockColor, 0.6, true, 'Static', undefined);
-     createPaintableCone(pos, 8, 5, Quaternion.fromEuler(new Vector3(Math.PI, 0, 0)), groundColor, 0.3, 1048);
+    createPaintableCone(pos.add(new Vector3(0, -2, 0)), 8, 5, Quaternion.fromEuler(new Vector3(Math.PI, 0, 0)), groundColor, 0.3, 1048);
 
     const spinningSphere = createPaintableSphere(pos.add(new Vector3(0, 3, 0)), 16, 4, waterColor, 1, 2048);
     spinningSphere.rot = Quaternion.fromEuler(new Vector3(0, 0, Math.PI / 2));
