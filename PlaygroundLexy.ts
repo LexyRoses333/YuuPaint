@@ -17,12 +17,15 @@ export const lexy = {
 }
 
 function spawnDrawSettingButtons(pos: Vector3) {
+  spawnPrimitive.plane('Front', pos.add(new Vector3(0, 0, -0.01)), new Vector3(2, 1.5, 0.2), Quaternion.one, Color.white, 0.2, 'Convex', 'Static', undefined);
+
   createDrawSettingButton(pos, 'Size', 'px', 512, 1, 0.5, Paint.properties.radius.get, Paint.properties.radius.set);
   createDrawSettingButton(pos.add(new Vector3(0.35, 0, 0)), 'Alpha', '%', 1, 0.01, 0.01, Paint.properties.alpha.get, Paint.properties.alpha.set);
   createDrawSettingButton(pos.add(new Vector3(-0.35, 0, 0)), 'Hardness', '%', 1, 0.01, 0.01, Paint.properties.hardness.get, Paint.properties.hardness.set);
 
   createAltDrawSettingButton(pos.add(new Vector3(0.35, 0.18, 0)), 'Shape', Paint.properties.brushShape.get, Paint.properties.brushShape.set);
   createAltDrawSettingButton(pos.add(new Vector3(-0.35, 0.18, 0)), 'Type', Paint.properties.brushType.get, Paint.properties.brushType.set); //fix setting payload to match both shape and type
+  //create another button for LineType
 }
 
 function createDrawSettingButton(pos: Vector3, settingName: BrushSetting, unitPostfix: string, max: number, min: number, defaultIncrementAmount: number, getCurValueFunc: () => number, updateValueFunc: (value: number) => void) {
@@ -64,8 +67,8 @@ function setRayClickFunctions(clickableEntity: Entity, isIncrease: boolean, sett
 
 function setRayClickFuncsAlt(clickableEntity: Entity, textEntity: Entity, isIncrease: boolean, settingType: 'Shape' | 'Type', getCurValueFunc: () => string, updateValueFunc: ((setting: BrushShapes) => void) | ((setting: BrushTypes) => void)) {
   clickableEntity.rayClick.setClickFunction(() => { cycleDrawSetting(isIncrease, settingType, textEntity, getCurValueFunc, updateValueFunc); });
-  clickableEntity.rayClick.setHeldFunction(() => {});
-  clickableEntity.rayClick.setReleaseFunction(() => {});
+  clickableEntity.rayClick.setHeldFunction(() => { });
+  clickableEntity.rayClick.setReleaseFunction(() => { });
 }
 
 

@@ -65,9 +65,9 @@ export const paintShapes = {
 
 export type BrushShapes = 'Round' | 'Square' | 'Star' | 'Flower' | 'Triangle' | 'Heart' | 'Line';
 
-export type LineOrientation = 'Horizontal' | 'Vertical' | 'Slash';
+export type LineType = 'Horizontal' | 'Vertical' | 'Slash';
 
-type ShapeFuncProperties = { brushTexture: Texture, brushStartPixel: Vector2, radius: number, cropRadius: number, color: Color, alpha: number, numberOfPoints: number | undefined, lineOrientation: LineOrientation | undefined, lineThickness: number | undefined };
+type ShapeFuncProperties = { brushTexture: Texture, brushStartPixel: Vector2, radius: number, cropRadius: number, color: Color, alpha: number, numberOfPoints: number | undefined, lineOrientation: LineType | undefined, lineThickness: number | undefined };
 
 
 function getShapeFunc(brushShape: BrushShapes): (shapeFuncProperties: ShapeFuncProperties) => void {
@@ -269,7 +269,8 @@ function fillLine(shapeFuncProperties: ShapeFuncProperties) {
   const centerPixel = shapeFuncProperties.brushStartPixel.add(new Vector2(shapeFuncProperties.radius, shapeFuncProperties.radius));
 
   const orientation = shapeFuncProperties.lineOrientation ?? 'Slash';
-  const halfThickness = (shapeFuncProperties.lineThickness ?? 8) / 2;
+  // const halfThickness = (shapeFuncProperties.lineThickness ?? 8) / 2;
+  const halfThickness = Math.floor(shapeFuncProperties.radius / 10);
   const halfThicknessSq = halfThickness * halfThickness;
 
   let isValid = false;
