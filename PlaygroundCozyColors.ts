@@ -22,9 +22,9 @@ import { overTime } from "./Yuu API/MotionOverTime";
 
 //Color Scheme
 const groundColor = new Color(0, 0.349, 0.337);
-const patioColor = new Color(0.620, 0.792, 0.475);
+const patioColor = new Color(0.420, 0.792, 0.575);
 const waterColor = new Color(0.098, 0.698, 0.682);
-const rockColor = Color.randomHue(0.25, 0.35);
+const rockColor = Color.randomHue(0.75, 0.35);
 const skyColor = new Color(0.561, 0.486, 0.522);  //maybe use a randHue as well?
 
 registerStart(start);
@@ -51,10 +51,10 @@ function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, col
 
     plane.mesh.texture.set(texture, false);
     plane.mesh.texture.setMipMaps(false);
+    plane.mesh.texture.isPaintable.set(true);
 
     texture.fillWithColor(color, alpha);
-
-    plane.mesh.texture.isPaintable.set(true);
+    texture.updateTexture();
 
     return plane;
 }
@@ -68,6 +68,7 @@ function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, colo
     cube.mesh.texture.isPaintable.set(true);
 
     texture.fillWithColor(color, alpha);
+    texture.updateTexture();
 
     return cube;
 }
@@ -113,8 +114,8 @@ function spawnArtStudio(pos: Vector3) {
 
     spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.one, rockColor, 1, true, "Static", patio); //roof
 
-    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.85, -3)), Quaternion.one, Vector3.one);
-    playgroundDemos.canvas(pos.add(new Vector3(2, 0.85, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
+    playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
 
     playgroundDemos.colorPicker(pos.add(new Vector3(5, 1.5, 0)), Quaternion.fromEuler(new Vector3(0, -Math.PI / 2, 0)), new Vector3(3, 2, 3));
 
@@ -134,7 +135,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
     spawnPrimitive.cube(pos.add(new Vector3(2, 4, 0)), new Vector3(1.5, 8, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
     spawnPrimitive.cube(pos.add(new Vector3(0, 2, -2)), new Vector3(1.5, 4, 1.5), Quaternion.one, Color.randomHue(0.9, 0.75), 1, true, 'Static', undefined);
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
         const x = (Math.random() * 2 - 1) * maxRadius;
         const y = (Math.random() * maxHeight) + 0.25;
         const z = (Math.random() * 2 - 1) * maxRadius;
@@ -160,7 +161,7 @@ function spawnInteractiveSculpture(pos: Vector3) {
             const newPos = playerPos.subtract(dir);
 
             overTime.moveTo.start(cube, newPos, 5_000);
-            overTime.rotateTo.start(cube, Quaternion.one, 5_000);
+            // overTime.rotateTo.start(cube, Quaternion.one, 5_000);
 
             asyncID = Async.setTimeout(() => {
                 overTime.moveTo.start(cube, startPos, 5_000);
