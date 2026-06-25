@@ -32,8 +32,9 @@ async function start() {
     //Paintable ground 
     createPaintablePlane(new Vector3(0, 0.02, 0), new Vector3(60, 60, 60), Quaternion.fromEuler(new Vector3(-Math.PI / 2, 0, 0)), groundColor, 1, 2048); //check scale placement for collider
 
-    Paint.properties.color.set(patioColor);
+    Paint.properties.color.set(Color.randomHue(0.75, 0.8));
     Paint.properties.radius.set(30);
+    Paint.properties.brushShape.set('Round');
 
     //Painting Studio
     spawnArtStudio(new Vector3(20, 0.25, -20));
@@ -42,64 +43,13 @@ async function start() {
     spawnInteractiveSculpture(new Vector3(15, 0, 15));
 
     //CubeTest
-    spawnMovingCube(new Vector3(-5, 2, -5));
+    spawnMovingCube(new Vector3(5, 1, -5));
+
+    //Paintable rotating sphere
+    const spinningSphere = createPaintableSphere(new Vector3(0, 2, 0), 16, 4, skyColor, 1, 2048);
+    overTime.rotateTo.start(spinningSphere, Quaternion.fromEuler(new Vector3(0, Math.PI * 2, 0)), 5_000);
 }
 
-function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
-    const texture = new Texture(pixels, pixels);
-
-    plane.mesh.texture.set(texture, false);
-    plane.mesh.texture.setMipMaps(false);
-    plane.mesh.texture.isPaintable.set(true);
-
-    texture.fillWithColor(color, alpha);
-    texture.updateTexture();
-
-    return plane;
-}
-
-function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined);  //doesnt have Concave ability for box collider?? Not paintable in world
-    const texture = new Texture(pixels, pixels);
-
-    cube.mesh.texture.set(texture, false);
-    cube.mesh.texture.setMipMaps(false);
-    cube.mesh.texture.isPaintable.set(true);
-
-    texture.fillWithColor(color, alpha);
-    texture.updateTexture();
-
-    return cube;
-}
-
-function createPaintableSphere(pos: Vector3, columns: number, diameter: number, color: Color, alpha: number, pixels: number): Entity {
-    const sphere = spawnPrimitive.sphere(columns, 16, pos, diameter, Quaternion.one, color, alpha, 'Concave', 'Static', undefined);
-    const texture = new Texture(pixels, pixels);
-
-    sphere.mesh.texture.set(texture, false);
-    sphere.mesh.texture.setMipMaps(false);
-    sphere.mesh.texture.isPaintable.set(true);
-
-    texture.fillWithColor(color, alpha);
-    texture.updateTexture();
-
-    return sphere;
-}
-
-function createPaintableCone(pos: Vector3, columns: number, diameter: number, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
-    const cone = spawnPrimitive.cone(columns, pos, diameter, rot, color, alpha, 'Convex', 'Static', undefined);  //no "Concave" option-- check for issues with paintability
-    const texture = new Texture(pixels, pixels);
-
-    cone.mesh.texture.set(texture, false);
-    cone.mesh.texture.setMipMaps(false);
-    cone.mesh.texture.isPaintable.set(true);
-
-    texture.fillWithColor(color, alpha);
-    texture.updateTexture();
-
-    return cone;
-}
 
 function spawnArtStudio(pos: Vector3) {
     const patio = createPaintableCube(pos, new Vector3(10, 0.4, 10), Quaternion.one, patioColor, 1, 2048);
@@ -109,12 +59,12 @@ function spawnArtStudio(pos: Vector3) {
     const roofScale = new Vector3(patio.scale.x * 1.2, roofThickness, patio.scale.z * 1.2);
     const roofHeight = poleScale.y + (roofThickness / 2);
 
-    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back left
-    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, 4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //back right
-    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), new Vector3(0.25, 5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //front left
-    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), new Vector3(0.25, 4.5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //front right
+    spawnPrimitive.cube(new Vector3(-4.5, 2.5, 4.5), new Vector3(0.25, 5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //back left
+    spawnPrimitive.cube(new Vector3(4.5, 2.5, 4.5), new Vector3(0.25, 5, 0.25), Quaternion.one, rockColor, 1, true, "Static", patio); //back right
+    spawnPrimitive.cube(new Vector3(-4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front left
+    spawnPrimitive.cube(new Vector3(4.5, poleScale.y / 2, -4.5), poleScale, Quaternion.one, rockColor, 1, true, "Static", patio); //front right
 
-    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI/12, 0, 0)), Color.randomHue(0.65, 0.2), 1, true, "Static", patio); //roof
+    spawnPrimitive.cube(new Vector3(0, roofHeight, 0), roofScale, Quaternion.fromEuler(new Vector3(Math.PI/12, 0, 0)), Color.randomHue(0.75, 0.25), 1, true, "Static", patio); //roof
 
     playgroundDemos.canvas(pos.add(new Vector3(-2, 0.95, -3)), Quaternion.one, Vector3.one);
     playgroundDemos.canvas(pos.add(new Vector3(2, 0.95, -3)), Quaternion.one, Vector3.one);
@@ -173,7 +123,6 @@ function spawnInteractiveSculpture(pos: Vector3) {
     }
 }
 
-
 function spawnMovingCube(pos: Vector3) {
     //Turn this into a hide and seek game... use cool magic shader, randomly moves in world and shrinks until it moves again-- find it and catch it to trigger something cool
     const cube = spawnPrimitive.cube(pos, Vector3.one, Quaternion.one, Color.randomHue(), 1, true, "Static", undefined);
@@ -188,6 +137,64 @@ function spawnMovingCube(pos: Vector3) {
         overTime.moveTo.start(cube, pos, 5_500);
     }, 8_000);
 }
+
+function createPaintablePlane(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const plane = spawnPrimitive.plane("Front", pos, scale, rot, color, alpha, "Concave", "Static", undefined);
+    const texture = new Texture(pixels, pixels);
+
+    plane.mesh.texture.set(texture, false);
+    plane.mesh.texture.setMipMaps(false);
+    plane.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
+
+    return plane;
+}
+
+function createPaintableCube(pos: Vector3, scale: Vector3, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const cube = spawnPrimitive.cube(pos, scale, rot, color, alpha, true, "Static", undefined); 
+    const texture = new Texture(pixels, pixels);
+
+    cube.mesh.texture.set(texture, false);
+    cube.mesh.texture.setMipMaps(false);
+    cube.mesh.texture.isPaintable.set(true);  //doesnt have Concave ability for box collider?? Not yet paintable in world
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
+
+    return cube;
+}
+
+function createPaintableSphere(pos: Vector3, columns: number, diameter: number, color: Color, alpha: number, pixels: number): Entity {
+    const sphere = spawnPrimitive.sphere(columns, 16, pos, diameter, Quaternion.one, color, alpha, 'Concave', 'Static', undefined);
+    const texture = new Texture(pixels, pixels);
+
+    sphere.mesh.texture.set(texture, false);
+    sphere.mesh.texture.setMipMaps(false);
+    sphere.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
+
+    return sphere;
+}
+
+function createPaintableCone(pos: Vector3, columns: number, diameter: number, rot: Quaternion, color: Color, alpha: number, pixels: number): Entity {
+    const cone = spawnPrimitive.cone(columns, pos, diameter, rot, color, alpha, 'Convex', 'Static', undefined);  //no "Concave" option-- check for issues with paintability
+    const texture = new Texture(pixels, pixels);
+
+    cone.mesh.texture.set(texture, false);
+    cone.mesh.texture.setMipMaps(false);
+    cone.mesh.texture.isPaintable.set(true);
+
+    texture.fillWithColor(color, alpha);
+    texture.updateTexture();
+
+    return cone;
+}
+
+
 
 
 
